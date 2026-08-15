@@ -5,7 +5,6 @@ import { speechService } from './services/speechService';
 import { storageService } from './services/storageService';
 
 // Components
-import { DocumentUploadBar } from './components/DocumentUploadBar';
 import { AssistantRobot } from './components/AssistantRobot';
 import { ConversationThread } from './components/ConversationThread';
 import { ChatInputBar } from './components/ChatInputBar';
@@ -15,30 +14,26 @@ export const App: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [phase, setPhase] = useState<AppPhase>('idle');
 
-  // Grounded documents list
-  const [documents, setDocuments] = useState<UploadedDocument[]>(() => {
-    const loaded = storageService.loadDocuments();
-    const clean = loaded.filter(doc => {
-      const hasRawPdf = doc.rawText.includes('%PDF') ||
-        doc.rawText.includes('<< /') ||
-        doc.rawText.includes('/Parent') ||
-        doc.rawText.includes(' 0 R') ||
-        doc.rawText.includes('endobj');
-      return !hasRawPdf;
-    });
-    if (clean.length !== loaded.length) {
-      storageService.saveDocuments(clean);
+  // Grounded documents list — restricted to the default syllabus
+  const [documents, setDocuments] = useState<UploadedDocument[]>([
+    {
+      id: 'default-supervised-learning',
+      fileName: 'Supervised_Learning_Syllabus.txt',
+      fileSize: 15331,
+      fileType: 'txt',
+      uploadDate: new Date().toISOString(),
+      status: 'ready',
+      rawText: 'Supervised Learning syllabus outline covering linear models for regression and classification.',
+      subjectName: 'Supervised Learning Syllabus',
+      units: []
     }
-    return clean;
-  });
+  ]);
 
   // Conversation messages history
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [liveTranscript, setLiveTranscript] = useState('');
 
-  useEffect(() => {
-    storageService.saveDocuments(documents);
-  }, [documents]);
+  // Storage saving/loading for documents disabled to avoid caching legacy files from other sessions
 
   // Sync speech callbacks
   useEffect(() => {
@@ -101,6 +96,11 @@ export const App: React.FC = () => {
     setMessages([]);
     setPhase('idle');
     speechService.stopSpeaking();
+  };
+
+  const handleStopSpeaking = () => {
+    speechService.stopSpeaking();
+    setPhase('idle');
   };
 
   const handleDocumentUploaded = (newDoc: UploadedDocument) => {
@@ -191,6 +191,7 @@ export const App: React.FC = () => {
         onStartListening={() => speechService.startListening()}
         onStopListening={() => speechService.stopListening()}
         onSendTextQuery={handleAskQuestion}
+        onStopSpeaking={handleStopSpeaking}
         hasDocuments={true}
       />
     </div>

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Bot, User, Sparkles } from 'lucide-react';
 import { ChatMessage } from '../types';
+import ReactMarkdown from 'react-markdown';
 
 interface ConversationThreadProps {
   messages: ChatMessage[];
@@ -67,7 +68,13 @@ export const ConversationThread: React.FC<ConversationThreadProps> = ({
                   : 'bg-slate-900 border border-slate-800 text-slate-100 rounded-tl-none shadow-sm'
               }`}
             >
-              <div className="whitespace-pre-wrap">{msg.text}</div>
+              {isUser ? (
+                <div className="whitespace-pre-wrap">{msg.text}</div>
+              ) : (
+                <div className="prose prose-invert prose-sm max-w-none prose-headings:text-slate-100 prose-headings:mt-3 prose-headings:mb-1.5 prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-table:text-xs prose-th:bg-slate-800 prose-th:px-2 prose-th:py-1 prose-td:px-2 prose-td:py-1 prose-td:border-slate-700 prose-th:border-slate-600 prose-strong:text-slate-200">
+                  <ReactMarkdown>{msg.text}</ReactMarkdown>
+                </div>
+              )}
 
               {/* Source Reference if available */}
               {msg.sourceRef && (
@@ -96,7 +103,7 @@ export const ConversationThread: React.FC<ConversationThreadProps> = ({
           </div>
           <div className="bg-slate-900 border border-slate-800 rounded-2xl rounded-tl-none p-3.5 text-xs text-slate-400 flex items-center gap-2">
             <div className="w-3.5 h-3.5 rounded-full border-2 border-brand-400 border-t-transparent animate-spin" />
-            <span>Analyzing document facts...</span>
+            <span>Thinking...</span>
           </div>
         </div>
       )}

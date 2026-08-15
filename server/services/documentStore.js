@@ -28,11 +28,17 @@ const ROMAN_MAP = {
 };
 
 const SYNONYMS = {
-  "iclient": ["headful", "headless", "iframe", "pos", "modal", "sdk", "interface", "integration"],
-  "tyro": ["terminal", "eftpos", "payment", "gateway", "merchant", "card", "processing", "api"],
-  "settlement": ["reconciliation", "batch", "payout", "bank", "funds", "transfer", "clearing"],
-  "headless": ["pos", "modal", "generated", "program", "interface", "custom"],
-  "headful": ["iframe", "modal", "display", "details", "screen"]
+  "regression": ["linear", "prediction", "continuous", "equation", "slope", "intercept", "mse", "cost function"],
+  "classification": ["logistic", "categorical", "class", "label", "decision boundary", "sigmoid", "probability"],
+  "decision tree": ["entropy", "information gain", "gini", "split", "leaf", "node", "pruning"],
+  "bayesian": ["bayes", "prior", "posterior", "likelihood", "probability", "theorem"],
+  "naive bayes": ["spam", "conditional independence", "gaussian", "multinomial", "bernoulli", "text classification"],
+  "neural": ["neuron", "activation", "weight", "bias", "layer", "perceptron", "mlp", "feed-forward", "feedforward"],
+  "backpropagation": ["gradient", "chain rule", "backward", "error propagation", "loss", "weight update"],
+  "svm": ["support vector", "hyperplane", "margin", "kernel", "rbf", "polynomial"],
+  "random forest": ["ensemble", "bagging", "voting", "multiple trees", "overfitting"],
+  "perceptron": ["single neuron", "binary classification", "step function", "learning rate"],
+  "supervised": ["labeled", "training data", "prediction", "target", "output"]
 };
 
 // Normalize text helper
@@ -115,9 +121,15 @@ export function analyzeQuery(query) {
   const intent = detectIntent(query);
   const semester = detectSemester(query);
 
-  // Entity detection
+  // Entity detection – ML/supervised learning topics
   let entity = "";
-  const entities = ["iclient", "headless client", "headful client", "tyro terminal", "tyro", "settlement", "headless", "headful"];
+  const entities = [
+    "linear regression", "logistic regression", "regression",
+    "classification", "decision tree", "bayesian learning", "bayesian",
+    "naive bayes", "neural network", "perceptron", "multi-layer perceptron", "mlp",
+    "feed-forward network", "feedforward", "backpropagation", "error backpropagation",
+    "support vector machine", "svm", "random forest", "supervised learning"
+  ];
   for (const ent of entities) {
     if (norm.includes(ent)) {
       entity = ent;
@@ -127,7 +139,7 @@ export function analyzeQuery(query) {
 
   // Fallback entity extraction
   if (!entity) {
-    const stopwords = new Set(['what', 'is', 'the', 'how', 'does', 'do', 'a', 'an', 'are', 'in', 'on', 'of', 'for', 'to', 'with', 'explain', 'detail']);
+    const stopwords = new Set(['what', 'is', 'the', 'how', 'does', 'do', 'a', 'an', 'are', 'in', 'on', 'of', 'for', 'to', 'with', 'explain', 'detail', 'define', 'meaning', 'give', 'example', 'all', 'topics']);
     entity = query.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).find(w => w.length > 3 && !stopwords.has(w)) || "";
   }
 
@@ -174,7 +186,11 @@ class DocumentStore {
   addChunks(documentId, documentName, rawText) {
     if (!rawText || !rawText.trim()) return;
 
-    this.clear();
+    if (documentId === "default-supervised-learning") {
+      this.clear();
+    } else {
+      this.chunks = this.chunks.filter(c => c.documentId !== documentId && c.documentName !== documentName);
+    }
 
     const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
     let currentSemester = null;
@@ -334,10 +350,15 @@ class DocumentStore {
         // Lower score drastically for wrong semester
         item.finalScore -= 0.4;
       }
-      return item.finalScore > 0.15;
+      return item.finalScore > 0.05;
     });
 
     filtered.sort((a, b) => b.finalScore - a.finalScore);
+
+    if (filtered.length === 0 && scoredCandidates.length > 0) {
+      return scoredCandidates.slice(0, topK);
+    }
+
     return filtered.slice(0, topK);
   }
 

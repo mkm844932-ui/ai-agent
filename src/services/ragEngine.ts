@@ -55,19 +55,8 @@ export class RAGEngine {
   // ─── Text Cleaning & Sanitization ───
   public sanitizeText(text: string): string {
     if (!text) return '';
-    return text
-      .replace(/<<\s*\/[^>]*>>/g, ' ')
-      .replace(/\/[A-Z][a-zA-Z]+\s+\d+\s+\d+\s+R/g, ' ')
-      .replace(/\d+\s+\d+\s+obj[\s\S]*?endobj/g, ' ')
-      .replace(/stream[\s\S]*?endstream/g, ' ')
-      .replace(/xref[\s\S]*?startxref/g, ' ')
-      .replace(/%PDF-[\d.]+/g, ' ')
-      .replace(/%%EOF/g, ' ')
-      .replace(/[{}"\\]/g, ' ')
-      .replace(/\b(?:healthpointRefTag|healthpointTotalBenefitAmount|healthpointTerminalDateTime|healthpointMemberNumber|serviceCode|patientId|responseCode|claimAmount|rebateAmount|transactionId)\b/gi, '')
-      .replace(/(?:Tyro\s+Settings\s+Page|iClient\s+Start\s+Page\s+here|API\s+Guide|SharePoint\s+Folder|TTA\s+Implementation\s+Page\s+here|Questionnaire\s+Document)/gi, '')
-      .replace(/\s{2,}/g, ' ')
-      .trim();
+    // Light sanitisation — preserve markdown formatting
+    return text.trim();
   }
 
   // ─── Default Empty Plan ───

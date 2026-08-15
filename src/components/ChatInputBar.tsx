@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Mic, MicOff, Send } from 'lucide-react';
+import { Mic, MicOff, Send, Square } from 'lucide-react';
 import { AppPhase } from '../types';
 
 interface ChatInputBarProps {
@@ -8,6 +8,7 @@ interface ChatInputBarProps {
   onStartListening: () => void;
   onStopListening: () => void;
   onSendTextQuery: (text: string) => void;
+  onStopSpeaking?: () => void;
   hasDocuments: boolean;
 }
 
@@ -17,6 +18,7 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
   onStartListening,
   onStopListening,
   onSendTextQuery,
+  onStopSpeaking,
   hasDocuments,
 }) => {
   const [textInput, setTextInput] = useState('');
@@ -24,6 +26,7 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const isListening = phase === 'listening';
+  const isSpeaking = phase === 'answering';
 
   const startVoiceRecording = async () => {
     onStartListening();
@@ -129,6 +132,19 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
           </span>
         </button>
 
+        {/* Stop Speaking Button */}
+        {isSpeaking && onStopSpeaking && (
+          <button
+            type="button"
+            onClick={onStopSpeaking}
+            className="p-2.5 rounded-xl border border-rose-500/60 bg-rose-600/20 hover:bg-rose-600/40 text-rose-400 hover:text-rose-300 transition-all flex items-center gap-1.5 shrink-0 animate-pulse"
+            title="Stop speaking"
+          >
+            <Square className="w-4 h-4 fill-current" />
+            <span className="text-xs font-semibold hidden sm:inline">Stop</span>
+          </button>
+        )}
+
         {/* Text Input */}
         <div className="flex-1 relative flex items-center">
           <input
@@ -137,12 +153,12 @@ export const ChatInputBar: React.FC<ChatInputBarProps> = ({
             onChange={(e) => setTextInput(e.target.value)}
             placeholder={
               !hasDocuments
-                ? 'Upload a syllabus outline or image on the left sidebar...'
+                ? 'Upload a syllabus outline to get started...'
                 : isListening
                 ? 'Listening to your voice...'
                 : isTranscribing
                 ? 'Transcribing speech with OpenAI Whisper...'
-                : 'Ask something about your syllabus outline...'
+                : 'Ask a question about your study material...'
             }
             disabled={!hasDocuments || isListening || isTranscribing}
             className="w-full bg-slate-950/80 border border-slate-800 focus:border-brand-500/60 rounded-xl pl-4 pr-10 py-2.5 text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none disabled:opacity-50 transition"
