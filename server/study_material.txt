@@ -1,0 +1,391 @@
+UNIT-II – SUPERVISED LEARNING
+
+1. Introduction to Supervised Learning
+Supervised learning is a type of machine learning in which a model learns from a dataset containing both input data and corresponding output labels.
+The model learns the relationship between the input variables and the known output. After learning from the training data, the model can predict the output for new, unseen input data.
+
+Basic Process:
+Training Data → Learning Algorithm → Trained Model → New Input → Prediction
+
+Example:
+Suppose we have information about houses:
+Area       | Bedrooms | Price
+1000 sq.ft | 2        | ₹40 lakh
+1500 sq.ft | 3        | ₹60 lakh
+2000 sq.ft | 4        | ₹80 lakh
+
+Here:
+- Area and bedrooms are input features.
+- House price is the target/output.
+- The model learns the relationship and predicts the price of a new house.
+
+Major Types of Supervised Learning:
+1. Regression – predicts continuous numerical values (e.g., predicting house prices, salary, temperature, sales, stock-related numerical values).
+2. Classification – predicts discrete categories or classes (e.g., Spam / Not Spam, Disease / No Disease, Pass / Fail, Cat / Dog, Fraud / Genuine).
+
+2. Linear Models for Regression
+Regression is used when the output variable is a continuous numerical value.
+
+Linear Regression:
+Linear regression assumes that the relationship between the input variables and the output can be represented approximately by a straight line.
+For a single input variable:
+y = mx + c
+Where:
+- y = predicted output
+- x = input
+- m = slope/coefficient
+- c = intercept
+
+For multiple input variables:
+y = β₀ + β₁x₁ + β₂x₂ + ... + βₙxₙ
+
+Example:
+To predict house price:
+Price = β₀ + β₁(Area) + β₂(Bedrooms)
+The model learns the coefficients from training data.
+
+Working Process:
+1. Collect training data.
+2. Identify input and output variables.
+3. Initialize model parameters.
+4. Calculate predictions.
+5. Calculate prediction error.
+6. Adjust parameters to reduce error.
+7. Repeat until the model learns a suitable relationship.
+8. Use the trained model to predict new values.
+
+Cost Function:
+A commonly used cost function is Mean Squared Error (MSE).
+MSE = (1/n) Σ(yᵢ - ŷᵢ)²
+The objective is to minimize the difference between actual and predicted values.
+
+Advantages of Linear Regression:
+- Simple to understand.
+- Easy to implement.
+- Computationally efficient.
+- Useful when the relationship is approximately linear.
+
+Limitations of Linear Regression:
+- Assumes a linear relationship.
+- Sensitive to outliers.
+- May perform poorly with complex nonlinear relationships.
+
+3. Linear Models for Classification
+Classification predicts a category or class rather than a continuous numerical value.
+Linear classification models create a decision boundary that separates different classes.
+
+A general linear decision function is:
+f(x) = wᵀx + b
+Where:
+- x = input feature vector
+- w = weight vector
+- b = bias
+- f(x) = decision function
+The sign or value of the function determines the predicted class.
+
+Logistic Regression:
+Despite its name, logistic regression is mainly used for classification.
+It uses the sigmoid function:
+σ(z) = 1 / (1 + e⁻ᶻ)
+The output is between 0 and 1 and can be interpreted as a probability.
+For example:
+- Probability >= 0.50 → likely Class 1
+- Probability < 0.50 → likely Class 0
+
+Advantages of Logistic Regression:
+- Simple and interpretable.
+- Efficient.
+- Produces probability estimates.
+- Works well when classes are approximately linearly separable.
+
+Limitations of Logistic Regression:
+- Struggles with highly nonlinear boundaries unless features are transformed.
+- Sensitive to irrelevant features and multicollinearity.
+
+4. Decision Tree Learning
+A decision tree is a supervised learning algorithm that makes predictions using a tree-like structure of decisions.
+It can be used for both classification and regression.
+
+Components:
+- Root node
+- Internal decision nodes
+- Branches
+- Leaf nodes
+
+Example:
+To predict whether a person will play cricket:
+Weather? → Sunny → Humidity? → High → No → Normal → Yes → Rain → Wind? → Strong → No → Weak → Yes
+
+Working Process:
+1. Start with the complete training dataset.
+2. Select the best feature for splitting.
+3. Divide the dataset according to that feature.
+4. Repeat the process for each resulting subset.
+5. Stop when an appropriate stopping condition is reached.
+6. The final nodes become prediction nodes.
+
+Feature Selection Measures:
+Entropy: Entropy measures the impurity or uncertainty in a dataset.
+Entropy(S) = -Σ pᵢ log₂(pᵢ)
+Lower entropy means greater purity.
+
+Information Gain: Information gain measures how much uncertainty is reduced after a split.
+Information Gain = Entropy(parent) - Weighted Entropy(children)
+Other tree algorithms may use Gini impurity.
+
+Advantages of Decision Trees:
+- Easy to understand and visualize.
+- Requires little preprocessing.
+- Can handle numerical and categorical data.
+- Useful for classification and regression.
+
+Limitations of Decision Trees:
+- Can overfit.
+- Small changes in data can create a different tree.
+- Deep trees can become complicated.
+
+5. Bayesian Learning
+Bayesian learning is based on Bayes' theorem and probability theory.
+Bayesian methods calculate the probability of a hypothesis based on available evidence.
+Bayesian learning updates an existing belief when new evidence becomes available.
+
+Bayes' Theorem:
+P(H|D) = [P(D|H) × P(H)] / P(D)
+Where:
+- P(H|D) = posterior probability
+- P(D|H) = likelihood
+- P(H) = prior probability
+- P(D) = evidence
+
+Example:
+Suppose a medical test is positive. Bayesian reasoning can determine:
+What is the probability that the patient actually has the disease given that the test is positive?
+The answer depends on:
+- Probability of having the disease.
+- Probability of receiving a positive test when the disease exists.
+- Overall probability of a positive test.
+
+Advantages of Bayesian Learning:
+- Handles uncertainty.
+- Can incorporate prior knowledge.
+- Useful with probabilistic reasoning.
+- Works well with relatively small datasets in some applications.
+
+Limitations of Bayesian Learning:
+- Requires appropriate probability assumptions.
+- Calculations can become complex for large models.
+
+6. Naive Bayes
+Naive Bayes is a classification algorithm based on Bayes' theorem.
+It is called naive because it assumes that the features are conditionally independent given the class.
+
+Formula:
+P(C|X) ∝ P(C) × P(X|C)
+With multiple features:
+P(C|X₁,...,Xₙ) ∝ P(C) × Π P(Xᵢ|C)
+
+Example - Spam Detection:
+Suppose an email contains "free", "offer", "winner". Naive Bayes calculates the probability that the email belongs to Spam or Not Spam. It selects the class with the highest posterior probability.
+
+Types:
+1. Gaussian Naive Bayes
+2. Multinomial Naive Bayes
+3. Bernoulli Naive Bayes
+
+Applications:
+- Spam filtering
+- Text classification
+- Sentiment analysis
+- Document classification
+- Medical classification
+
+Advantages:
+- Simple and fast.
+- Works well with high-dimensional data.
+- Particularly effective for text classification.
+- Requires relatively little training data.
+
+Limitations:
+- Independence assumption may not be realistic.
+- Correlated features can reduce performance.
+
+7. Neural Networks
+A neural network is a machine learning model inspired by the structure of biological neural systems. It consists of interconnected artificial neurons organized into layers.
+
+Basic Structure:
+Input Layer → Hidden Layer(s) → Output Layer
+Each connection has a weight, and neurons usually have a bias and an activation function.
+
+Artificial Neuron Model:
+A neuron calculates:
+z = w₁x₁ + w₂x₂ + ... + wₙxₙ + b
+Then applies an activation function:
+output = activation(z)
+
+Common Activation Functions:
+- Sigmoid: Produces values between 0 and 1.
+- ReLU: ReLU(x) = max(0, x). Commonly used in hidden layers.
+- Tanh: Produces values between -1 and 1.
+- Softmax: Often used in the output layer for multi-class classification.
+
+Applications:
+- Image recognition
+- Speech recognition
+- Natural language processing
+- Pattern recognition
+- Classification and Regression
+- Computer vision
+
+8. Perceptron Learning Algorithm
+The perceptron is one of the simplest neural network models, mainly used for binary classification.
+A perceptron calculates a weighted sum:
+z = wᵀx + b
+Then applies a step function:
+- z >= 0 → Class 1
+- z < 0 → Class 0
+
+Learning Process:
+1. Initialize weights and bias.
+2. Take a training example.
+3. Calculate the weighted sum.
+4. Generate prediction.
+5. Compare prediction with actual label.
+6. Update the weights if the prediction is incorrect: wᵢ = wᵢ + η(y - ŷ)xᵢ (where η is the learning rate, y is actual, ŷ is predicted).
+7. Repeat for all training examples.
+8. Continue for multiple iterations until convergence or a stopping condition.
+
+Limitation:
+- A basic perceptron can solve only problems that are linearly separable.
+- The classic XOR problem cannot be solved by a single-layer perceptron.
+
+9. Multi-Layer Perceptron (MLP)
+A Multi-Layer Perceptron is a neural network containing one or more hidden layers between the input and output layers.
+Structure:
+Input Layer → Hidden Layer 1 → Hidden Layer 2 → Output Layer
+MLPs can learn nonlinear relationships.
+
+Main Components:
+- Input neurons, weights, biases, hidden layers, activation functions, output layer.
+
+Why MLP is More Powerful Than a Perceptron:
+- A single perceptron creates only a linear decision boundary. An MLP can combine multiple neurons and nonlinear activation functions to model complex nonlinear relationships.
+
+Applications:
+- Classification, Regression, Pattern recognition, Prediction, Function approximation.
+
+10. Feed-Forward Neural Network
+A feed-forward neural network is a neural network in which information moves in one direction:
+Input → Hidden Layers → Output
+There are no cycles or feedback connections.
+
+Characteristics:
+- Information flows forward.
+- No recurrent connections.
+- Can contain zero or multiple hidden layers.
+- Used for classification and regression.
+- A single-layer perceptron and a Multi-Layer Perceptron can both be considered forms of feed-forward networks.
+
+Example:
+For image classification: Image Features → Hidden Layer → Hidden Layer → Output → Predicted Class
+
+11. Error Backpropagation
+Backpropagation is a training algorithm used to train neural networks. Its main purpose is to calculate how much each network parameter contributed to the prediction error and then adjust the parameters to reduce that error.
+
+Main Steps:
+Step 1 – Forward Pass: Input data is passed through the network, and the network produces a prediction.
+Step 2 – Calculate Error: The prediction is compared with the actual target using a loss function to calculate error.
+Step 3 – Backward Pass: The error is propagated backward through the network. Using the chain rule of calculus, gradients are calculated for the weights and biases: w = w - η(∂L/∂w).
+Step 4 – Update Parameters: Weights and biases are updated using an optimization method such as gradient descent.
+
+Training Cycle:
+Forward Pass → Calculate Loss → Backpropagate Error → Calculate Gradients → Update Weights → Repeat
+
+Advantages:
+- Efficiently trains multi-layer networks.
+- Can learn complex nonlinear relationships.
+- Fundamental to neural network training.
+
+Problems:
+- Can suffer from vanishing or exploding gradients.
+- Training can be computationally expensive.
+- Requires careful selection of learning rate and other hyperparameters.
+
+12. Support Vector Machines (SVM)
+Support Vector Machine is a supervised learning algorithm primarily used for classification, although it can also be used for regression.
+The main objective of SVM is to find the best decision boundary, called a hyperplane, that separates different classes.
+
+Main Idea:
+- SVM tries to maximize the margin between classes.
+- The data points closest to the decision boundary are called support vectors (the critical training points that determine the position of the decision boundary).
+
+Important Terms:
+- Hyperplane: The decision boundary separating classes.
+- Margin: The distance between the decision boundary and the closest training points.
+- Linear SVM: Works when classes can be separated approximately by a straight line or hyperplane.
+
+Kernel Trick:
+For nonlinear data, SVM can use kernel functions to effectively transform data into a higher-dimensional feature space.
+Common kernels: Linear, Polynomial, RBF, Sigmoid.
+
+Applications:
+- Text classification, Image classification, Pattern recognition, Biological data classification, Spam detection.
+
+Advantages:
+- Effective in high-dimensional spaces.
+- Works well when there is a clear margin between classes.
+- Kernel functions allow nonlinear classification.
+
+Limitations:
+- Can be computationally expensive for very large datasets.
+- Choosing the correct kernel and parameters can be difficult.
+- Less interpretable than simple decision trees.
+
+13. Random Forest
+Random Forest is an ensemble learning algorithm that combines multiple decision trees. Instead of relying on one decision tree, it creates many trees and combines their predictions.
+
+Main Idea:
+Multiple Decision Trees → Combined Prediction → Final Result
+For classification, the final prediction is generally based on majority voting. For regression, predictions from the trees can be averaged.
+
+How Random Forest Works:
+1. Select random samples from the training dataset.
+2. Build multiple decision trees.
+3. At each split, consider a random subset of features.
+4. Train each tree independently.
+5. Combine the predictions of all trees.
+6. Produce the final prediction.
+
+Example:
+Suppose 100 decision trees predict whether an email is spam:
+- 82 trees → Spam
+- 18 trees → Not Spam
+- Final prediction: Spam
+
+Why Random Forest Works Well:
+- A single decision tree can overfit the training data. Random Forest reduces this problem by combining many different trees. It uses the idea of bagging and random feature selection to increase diversity among trees.
+
+Advantages:
+- Good predictive performance.
+- Reduces overfitting compared with a single decision tree.
+- Can handle many features.
+- Works for classification and regression.
+- Can estimate feature importance.
+- Requires relatively little preprocessing.
+
+Limitations:
+- More computationally expensive than a single tree.
+- Less interpretable than one decision tree.
+- Large forests require more memory.
+
+14. Comparison of Major Supervised Learning Algorithms
+- Linear Regression: Regression | Fits a linear relationship
+- Logistic Regression: Classification | Uses probability and a decision boundary
+- Decision Tree: Classification/Regression | Makes hierarchical decisions
+- Bayesian Learning: Probabilistic learning | Uses Bayes' theorem
+- Naive Bayes: Classification | Bayes + conditional independence assumption
+- Perceptron: Binary Classification | Single artificial neuron
+- MLP: Classification/Regression | Multiple neural network layers
+- Feed-Forward Network: Classification/Regression | Information flows forward
+- Backpropagation: Neural network training | Propagates error backward
+- SVM: Classification/Regression | Maximizes separating margin
+- Random Forest: Classification/Regression | Combines multiple decision trees
